@@ -25,13 +25,19 @@ const StartPage = () => {
   const tileSize = puzzleSize / cells;
 
   const [puzzleGrid, setPuzzleGrid] = useState<PuzzleGridType[]>([]);
+  const [solutionGrid, setSolutionGrid] = useState<PuzzleGridType[]>([]);
 
   useEffect(() => {
     generateMatrix();
   }, []);
 
+  useEffect(() => {
+    checkSolution();
+  }, [puzzleGrid]);
+
   const generateMatrix = () => {
     const matrix: PuzzleGridType[] = [];
+    const randomPositions: [number, number][] = [];
     let tileIndex = 0;
     for (let x = 0; x < cells; x++) {
       for (let y = 0; y < cells; y++) {
@@ -41,9 +47,20 @@ const StartPage = () => {
           value: tileIndex,
         });
         tileIndex++;
+        randomPositions.push([x, y]);
       }
     }
+    setSolutionGrid(matrix);
     setPuzzleGrid(matrix);
+    randomPositions.sort(() => Math.random() - 0.5);
+    const puzzleGrid: PuzzleGridType[] = matrix.map((tile, index) => {
+      return {
+        x: randomPositions[index][0],
+        y: randomPositions[index][1],
+        value: tile.value,
+      };
+    });
+    setTimeout(() => setPuzzleGrid(puzzleGrid), 2000);
   };
 
   const getEmptyTile = () => puzzleGrid.find((tile) => tile.value === 8);
@@ -58,6 +75,12 @@ const StartPage = () => {
       ) {
         swapTiles(selectedTile, emptyTile);
       }
+    }
+  };
+
+  const checkSolution = () => {
+    if (JSON.stringify(solutionGrid) === JSON.stringify(puzzleGrid)) {
+      console.log("Game Over");
     }
   };
 
