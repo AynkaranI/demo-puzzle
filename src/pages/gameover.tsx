@@ -7,10 +7,10 @@ const StartPage = () => {
       <div>Game Over</div>
       <div>
         <Link to="/">
-          <button>Home</button>
+          <button className="btn">Home</button>
         </Link>
         <Link to="/puzzle">
-          <button>Restart</button>
+          <button className="btn">Restart</button>
         </Link>
       </div>
     </>
