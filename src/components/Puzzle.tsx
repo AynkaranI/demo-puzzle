@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import {
   tile1,
@@ -182,7 +183,12 @@ const Puzzle = () => {
                 }}
                 onClick={() => gameStarted && moveTile(tile)}
               >
-                <img src={tiles[index]} height={150} width={150}></img>
+                <img
+                  alt="img"
+                  src={tiles[index]}
+                  height={150}
+                  width={150}
+                ></img>
               </li>
             );
           })}
