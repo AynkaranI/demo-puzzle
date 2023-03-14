@@ -9,6 +9,7 @@ import {
   tile7,
   tile8,
   tile9,
+  mainImage
 } from "../../assets/images/puzzle";
 import { generateMatrix } from "../helpers/generateMatrix";
 
@@ -33,26 +34,38 @@ const Puzzle = () => {
   const keypressHandler = (event: KeyboardEvent) => {
     const emptyTile = getEmptyTile();
     if (emptyTile) {
-      if (event.code === "ArrowUp") {
+      if (event.code === "ArrowUp" || event.code === "KeyW") {
         const otherTile = puzzleGrid.find(
           (tile) => tile.x === emptyTile.x + 1 && tile.y === emptyTile.y
         );
-        otherTile && swapTiles(emptyTile, otherTile);
-      } else if (event.code === "ArrowDown") {
+        if(otherTile) {
+          swapTiles(emptyTile, otherTile);
+          setMoves(moves + 1);
+        }
+      } else if (event.code === "ArrowDown" || event.code === "KeyS") {
         const otherTile = puzzleGrid.find(
           (tile) => tile.x === emptyTile.x - 1 && tile.y === emptyTile.y
         );
-        otherTile && swapTiles(emptyTile, otherTile);
-      } else if (event.code === "ArrowLeft") {
+        if(otherTile) {
+          swapTiles(emptyTile, otherTile);
+          setMoves(moves + 1)
+        }
+      } else if (event.code === "ArrowLeft" || event.code === "KeyA") {
         const otherTile = puzzleGrid.find(
           (tile) => tile.x === emptyTile.x && tile.y === emptyTile.y + 1
         );
-        otherTile && swapTiles(emptyTile, otherTile);
-      } else if (event.code === "ArrowRight") {
+        if(otherTile) {
+          swapTiles(emptyTile, otherTile);
+          setMoves(moves + 1)
+        }
+      } else if (event.code === "ArrowRight" || event.code === "KeyD") {
         const otherTile = puzzleGrid.find(
           (tile) => tile.x === emptyTile.x && tile.y === emptyTile.y - 1
         );
-        otherTile && swapTiles(emptyTile, otherTile);
+        if(otherTile) {
+          swapTiles(emptyTile, otherTile);
+          setMoves(moves + 1)
+        }
       }
     }
   };
@@ -114,8 +127,11 @@ const Puzzle = () => {
   };
 
   const endGame = () => {
-    setMoves(0);
     setGameStarted(false);
+    setTimeout(() => {
+      alert("Congrats You have solved the puzzle");
+      setMoves(0);
+    },2000)
   };
 
   const startGame = () => {
@@ -141,8 +157,8 @@ const Puzzle = () => {
 
   return (
     <>
-      <div>Moves: {moves}</div>
-      <div>
+      <h1 className="text-white text-center mb-4">Solve the Puzzle</h1>
+      <div className="position-relative">
         <ul id="puzzle-box" style={{ height: puzzleSize, width: puzzleSize }}>
           {puzzleGrid.map((tile, index) => {
             return (
@@ -160,18 +176,22 @@ const Puzzle = () => {
             );
           })}
         </ul>
+        <img src={mainImage} alt="mainImage" className={`main-image ${ gameStarted ? "active" : ""}`} />
       </div>
-      <div>
+      <div className="d-flex justify-content-between align-items-center mt-5">
         {!gameStarted && (
-          <button className="btn btn-primary" onClick={startGame}>
+          <button className="btn btn-light" onClick={startGame}>
             Start Game
           </button>
         )}
+        {/* Mobile Image  */}
         {gameStarted && (
-          <button className="btn btn-primary" onClick={resetGrid}>
+          <button className="btn btn-info" onClick={resetGrid}>
             Reset
           </button>
         )}
+        <img src={mainImage} alt="mainImage" className={`mobile-img ${ gameStarted ? "active" : ""}`} width={120} height={120} />
+        <div className={`moves transition ${moves ? "opacity-100" : "opacity-0"}`}>Moves: {moves}</div>
       </div>
     </>
   );

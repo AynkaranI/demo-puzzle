@@ -14,6 +14,9 @@ body {
     ul {
         padding: 0 !important;
     }
+    .transition {
+        transition: all .3s ease;
+    }
 
     #puzzle-box {
         display: flex;
@@ -39,4 +42,31 @@ body {
             opacity: 0;
         }
     }
+
+    .main-image {
+        position: absolute;
+        top: 0;
+        transition: all 1s ease;
+    }
+    .main-image.active {
+        transform: scale(.6) translateX(-200%);
+    }
+
+    .moves {
+        font-size: 1.8em;
+        color: #fff;
+    }
+    .mobile-img {
+        display: none;
+    }
+
 }
+
+@media (max-width: 786px) {
+    .mobile-img {
+        display: none;
+    }
+    .mobile-img.active {
+        display: block;
+    }
+  }

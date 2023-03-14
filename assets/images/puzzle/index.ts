@@ -7,5 +7,6 @@ import tile6 from "./6.png";
 import tile7 from "./7.png";
 import tile8 from "./8.png";
 import tile9 from "./9.png";
+import mainImage from './puzzle.png';
 
-export { tile1, tile2, tile3, tile4, tile5, tile6, tile7, tile8, tile9 };
+export { tile1, tile2, tile3, tile4, tile5, tile6, tile7, tile8, tile9, mainImage };
