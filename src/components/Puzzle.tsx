@@ -30,6 +30,38 @@ const Puzzle = () => {
   const [gameStarted, setGameStarted] = useState(false);
   const [moves, setMoves] = useState(0);
 
+  const keypressHandler = (event: KeyboardEvent) => {
+    const emptyTile = getEmptyTile();
+    if (emptyTile) {
+      if (event.code === "ArrowUp") {
+        const otherTile = puzzleGrid.find(
+          (tile) => tile.x === emptyTile.x + 1 && tile.y === emptyTile.y
+        );
+        otherTile && swapTiles(emptyTile, otherTile);
+      } else if (event.code === "ArrowDown") {
+        const otherTile = puzzleGrid.find(
+          (tile) => tile.x === emptyTile.x - 1 && tile.y === emptyTile.y
+        );
+        otherTile && swapTiles(emptyTile, otherTile);
+      } else if (event.code === "ArrowLeft") {
+        const otherTile = puzzleGrid.find(
+          (tile) => tile.x === emptyTile.x && tile.y === emptyTile.y + 1
+        );
+        otherTile && swapTiles(emptyTile, otherTile);
+      } else if (event.code === "ArrowRight") {
+        const otherTile = puzzleGrid.find(
+          (tile) => tile.x === emptyTile.x && tile.y === emptyTile.y - 1
+        );
+        otherTile && swapTiles(emptyTile, otherTile);
+      }
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("keydown", keypressHandler);
+    return () => window.removeEventListener("keydown", keypressHandler);
+  }, [puzzleGrid]);
+
   useEffect(() => {
     setGridWithMatrix(matrix, true);
   }, []);
@@ -82,7 +114,6 @@ const Puzzle = () => {
   };
 
   const endGame = () => {
-    console.log("Game Over");
     setMoves(0);
     setGameStarted(false);
   };
