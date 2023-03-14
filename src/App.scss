@@ -1,0 +1,76 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #000 !important;
+
+  ul {
+    padding: 0 !important;
+  }
+
+  .transition {
+    transition: all .3s ease;
+  }
+
+  #puzzle-box {
+    display: flex;
+    flex-wrap: wrap;
+    position: relative;
+    margin: auto;
+
+    li {
+      position: absolute;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 2em;
+      color: #000;
+      background-color: #fff;
+      transition: all 1s ease;
+      box-shadow: 0px 0px 10px #000;
+    }
+
+    li.disable {
+      z-index: -1;
+      pointer-events: none;
+      opacity: 0;
+    }
+  }
+
+  .main-image {
+    position: absolute;
+    top: 0;
+    transition: all 1s ease;
+  }
+
+  .main-image.active {
+    transform: scale(.6) translateX(-200%);
+  }
+
+  .moves {
+    font-size: 1.8em;
+    color: #fff;
+  }
+
+  .mobile-img {
+    display: none;
+  }
+
+}
+
+@media (max-width: 786px) {
+  .mobile-img {
+    display: none;
+  }
+
+  .mobile-img.active {
+    display: block;
+  }
+}

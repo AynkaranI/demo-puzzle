@@ -9,8 +9,8 @@ import {
   tile7,
   tile8,
   tile9,
-  mainImage
-} from "../../assets/images/puzzle";
+  mainImage,
+} from "../assets/images/puzzle";
 import { generateMatrix } from "../helpers/generateMatrix";
 
 export interface PuzzleGridType {
@@ -25,13 +25,14 @@ const Puzzle = () => {
   const puzzleSize = 450;
   const tileSize = puzzleSize / cells;
   const matrix = generateMatrix(cells);
-  const storedData = localStorage.getItem("puzzle") && JSON.parse(localStorage.getItem("puzzle") || "");
+  const storedData =
+    localStorage.getItem("puzzle") &&
+    JSON.parse(localStorage.getItem("puzzle") || "");
 
   const [puzzleGrid, setPuzzleGrid] = useState<PuzzleGridType[]>([]);
   const [solutionGrid, setSolutionGrid] = useState("");
   const [gameStarted, setGameStarted] = useState(false);
   const [moves, setMoves] = useState(0);
-
 
   const startGame = () => {
     setGameStarted(true);
@@ -43,7 +44,7 @@ const Puzzle = () => {
     setTimeout(() => {
       alert("Congrats You have solved the puzzle");
       setMoves(0);
-    },2000)
+    }, 2000);
   };
 
   const checkSolution = () => {
@@ -58,19 +59,19 @@ const Puzzle = () => {
   }, [puzzleGrid]);
 
   useEffect(() => {
-    if(storedData) {
+    if (storedData) {
       setGameStarted(true);
-      setPuzzleGrid(storedData.puzzleGrid)
-      setMoves(storedData.moves)
-    }
-    else {
+      setPuzzleGrid(storedData.puzzleGrid);
+      setMoves(storedData.moves);
+    } else {
       setGridWithMatrix(matrix, true);
-    } 
+    }
   }, []);
 
   useEffect(() => {
     checkSolution();
-    moves && localStorage.setItem("puzzle",JSON.stringify({puzzleGrid, moves}));
+    moves &&
+      localStorage.setItem("puzzle", JSON.stringify({ puzzleGrid, moves }));
   }, [puzzleGrid]);
 
   const setGridWithMatrix = (
@@ -117,7 +118,7 @@ const Puzzle = () => {
         const otherTile = puzzleGrid.find(
           (tile) => tile.x === emptyTile.x + 1 && tile.y === emptyTile.y
         );
-        if(otherTile) {
+        if (otherTile) {
           swapTiles(emptyTile, otherTile);
           setMoves(moves + 1);
         }
@@ -125,25 +126,25 @@ const Puzzle = () => {
         const otherTile = puzzleGrid.find(
           (tile) => tile.x === emptyTile.x - 1 && tile.y === emptyTile.y
         );
-        if(otherTile) {
+        if (otherTile) {
           swapTiles(emptyTile, otherTile);
-          setMoves(moves + 1)
+          setMoves(moves + 1);
         }
       } else if (event.code === "ArrowLeft" || event.code === "KeyA") {
         const otherTile = puzzleGrid.find(
           (tile) => tile.x === emptyTile.x && tile.y === emptyTile.y + 1
         );
-        if(otherTile) {
+        if (otherTile) {
           swapTiles(emptyTile, otherTile);
-          setMoves(moves + 1)
+          setMoves(moves + 1);
         }
       } else if (event.code === "ArrowRight" || event.code === "KeyD") {
         const otherTile = puzzleGrid.find(
           (tile) => tile.x === emptyTile.x && tile.y === emptyTile.y - 1
         );
-        if(otherTile) {
+        if (otherTile) {
           swapTiles(emptyTile, otherTile);
-          setMoves(moves + 1)
+          setMoves(moves + 1);
         }
       }
     }
@@ -164,7 +165,6 @@ const Puzzle = () => {
     };
     setPuzzleGrid(newPuzzleGrid);
   };
-
 
   return (
     <>
@@ -187,7 +187,11 @@ const Puzzle = () => {
             );
           })}
         </ul>
-        <img src={mainImage} alt="mainImage" className={`main-image ${ gameStarted ? "active" : ""}`} />
+        <img
+          src={mainImage}
+          alt="mainImage"
+          className={`main-image ${gameStarted ? "active" : ""}`}
+        />
       </div>
       <div className="d-flex justify-content-between align-items-center mt-5">
         {!gameStarted && (
@@ -201,8 +205,18 @@ const Puzzle = () => {
             Shuffle
           </button>
         )}
-        <img src={mainImage} alt="mainImage" className={`mobile-img ${ gameStarted ? "active" : ""}`} width={120} height={120} />
-        <div className={`moves transition ${moves ? "opacity-100" : "opacity-0"}`}>Moves: {moves}</div>
+        <img
+          src={mainImage}
+          alt="mainImage"
+          className={`mobile-img ${gameStarted ? "active" : ""}`}
+          width={120}
+          height={120}
+        />
+        <div
+          className={`moves transition ${moves ? "opacity-100" : "opacity-0"}`}
+        >
+          Moves: {moves}
+        </div>
       </div>
     </>
   );
