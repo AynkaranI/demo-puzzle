@@ -3,14 +3,10 @@ import { HeadFC, Link, PageProps } from "gatsby";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/index.scss";
 
-const IndexPage: React.FC<PageProps> = () => {
-  return (
-    <>
-      <Link to="/puzzle">
-        <button className="btn">Start</button>
-      </Link>
-    </>
-  );
+import Puzzle from "../components/Puzzle";
+
+const IndexPage = () => {
+  return <Puzzle />;
 };
 
 export default IndexPage;
