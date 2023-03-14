@@ -25,11 +25,90 @@ const Puzzle = () => {
   const puzzleSize = 450;
   const tileSize = puzzleSize / cells;
   const matrix = generateMatrix(cells);
+  const storedData = localStorage.getItem("puzzle") && JSON.parse(localStorage.getItem("puzzle") || "");
 
   const [puzzleGrid, setPuzzleGrid] = useState<PuzzleGridType[]>([]);
   const [solutionGrid, setSolutionGrid] = useState("");
   const [gameStarted, setGameStarted] = useState(false);
   const [moves, setMoves] = useState(0);
+
+
+  const startGame = () => {
+    setGameStarted(true);
+    !storedData && resetGrid();
+  };
+
+  const endGame = () => {
+    setGameStarted(false);
+    setTimeout(() => {
+      alert("Congrats You have solved the puzzle");
+      setMoves(0);
+    },2000)
+  };
+
+  const checkSolution = () => {
+    if (gameStarted && moves && solutionGrid === JSON.stringify(puzzleGrid)) {
+      endGame();
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("keydown", keypressHandler);
+    return () => window.removeEventListener("keydown", keypressHandler);
+  }, [puzzleGrid]);
+
+  useEffect(() => {
+    if(storedData) {
+      setGameStarted(true);
+      setPuzzleGrid(storedData.puzzleGrid)
+      setMoves(storedData.moves)
+    }
+    else {
+      setGridWithMatrix(matrix, true);
+    } 
+  }, []);
+
+  useEffect(() => {
+    checkSolution();
+    moves && localStorage.setItem("puzzle",JSON.stringify({puzzleGrid, moves}));
+  }, [puzzleGrid]);
+
+  const setGridWithMatrix = (
+    gridMatrix: [number, number][],
+    isSolutionMatrix: boolean = false
+  ) => {
+    const puzzleGrid: PuzzleGridType[] = gridMatrix.map((cell, position) => {
+      return {
+        x: cell[0],
+        y: cell[1],
+        position,
+      };
+    });
+    setPuzzleGrid(puzzleGrid);
+    if (isSolutionMatrix) setSolutionGrid(JSON.stringify(puzzleGrid));
+  };
+
+  const resetGrid = () => {
+    const randomMatrix = [...matrix];
+    randomMatrix.sort(() => Math.random() - 0.5);
+    setGridWithMatrix(randomMatrix);
+  };
+
+  const getEmptyTile = () => puzzleGrid.find((tile) => tile.position === 8);
+
+  const moveTile = (selectedTile: PuzzleGridType) => {
+    const emptyTile = getEmptyTile();
+    if (emptyTile) {
+      if (
+        (selectedTile.x === emptyTile.x || selectedTile.y === emptyTile.y) &&
+        (Math.abs(selectedTile.x - emptyTile.x) === 1 ||
+          Math.abs(selectedTile.y - emptyTile.y) === 1)
+      ) {
+        setMoves(moves + 1);
+        swapTiles(selectedTile, emptyTile);
+      }
+    }
+  };
 
   const keypressHandler = (event: KeyboardEvent) => {
     const emptyTile = getEmptyTile();
@@ -70,75 +149,6 @@ const Puzzle = () => {
     }
   };
 
-  useEffect(() => {
-    window.addEventListener("keydown", keypressHandler);
-    return () => window.removeEventListener("keydown", keypressHandler);
-  }, [puzzleGrid]);
-
-  useEffect(() => {
-    setGridWithMatrix(matrix, true);
-  }, []);
-
-  useEffect(() => {
-    checkSolution();
-  }, [puzzleGrid]);
-
-  const setGridWithMatrix = (
-    gridMatrix: [number, number][],
-    isSolutionMatrix: boolean = false
-  ) => {
-    const puzzleGrid: PuzzleGridType[] = gridMatrix.map((cell, position) => {
-      return {
-        x: cell[0],
-        y: cell[1],
-        position,
-      };
-    });
-    setPuzzleGrid(puzzleGrid);
-    if (isSolutionMatrix) setSolutionGrid(JSON.stringify(puzzleGrid));
-  };
-
-  const resetGrid = () => {
-    const randomMatrix = [...matrix];
-    randomMatrix.sort(() => Math.random() - 0.5);
-    setGridWithMatrix(randomMatrix);
-  };
-
-  const getEmptyTile = () => puzzleGrid.find((tile) => tile.position === 8);
-
-  const moveTile = (selectedTile: PuzzleGridType) => {
-    const emptyTile = getEmptyTile();
-    if (emptyTile) {
-      if (
-        (selectedTile.x === emptyTile.x || selectedTile.y === emptyTile.y) &&
-        (Math.abs(selectedTile.x - emptyTile.x) === 1 ||
-          Math.abs(selectedTile.y - emptyTile.y) === 1)
-      ) {
-        setMoves(moves + 1);
-        swapTiles(selectedTile, emptyTile);
-      }
-    }
-  };
-
-  const checkSolution = () => {
-    if (gameStarted && moves && solutionGrid === JSON.stringify(puzzleGrid)) {
-      endGame();
-    }
-  };
-
-  const endGame = () => {
-    setGameStarted(false);
-    setTimeout(() => {
-      alert("Congrats You have solved the puzzle");
-      setMoves(0);
-    },2000)
-  };
-
-  const startGame = () => {
-    setGameStarted(true);
-    resetGrid();
-  };
-
   const swapTiles = (
     selectedTile: PuzzleGridType,
     emptyTile: PuzzleGridType
@@ -154,6 +164,7 @@ const Puzzle = () => {
     };
     setPuzzleGrid(newPuzzleGrid);
   };
+
 
   return (
     <>
@@ -187,7 +198,7 @@ const Puzzle = () => {
         {/* Mobile Image  */}
         {gameStarted && (
           <button className="btn btn-info" onClick={resetGrid}>
-            Reset
+            Shuffle
           </button>
         )}
         <img src={mainImage} alt="mainImage" className={`mobile-img ${ gameStarted ? "active" : ""}`} width={120} height={120} />
