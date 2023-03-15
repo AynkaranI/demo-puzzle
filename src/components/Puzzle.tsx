@@ -45,6 +45,7 @@ const Puzzle = () => {
     setTimeout(() => {
       alert("Congrats You have solved the puzzle");
       setMoves(0);
+      localStorage.removeItem("puzzle");
     }, 2000);
   };
 
@@ -60,12 +61,11 @@ const Puzzle = () => {
   }, [puzzleGrid]);
 
   useEffect(() => {
+    setGridWithMatrix(matrix, true);
     if (storedData) {
       setGameStarted(true);
       setPuzzleGrid(storedData.puzzleGrid);
       setMoves(storedData.moves);
-    } else {
-      setGridWithMatrix(matrix, true);
     }
   }, []);
 
@@ -92,7 +92,7 @@ const Puzzle = () => {
 
   const resetGrid = () => {
     const randomMatrix = [...matrix];
-    randomMatrix.sort(() => Math.random() - 0.5);
+    // randomMatrix.sort(() => Math.random() - 0.5);
     setGridWithMatrix(randomMatrix);
   };
 
