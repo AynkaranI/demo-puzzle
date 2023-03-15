@@ -92,7 +92,7 @@ const Puzzle = () => {
 
   const resetGrid = () => {
     const randomMatrix = [...matrix];
-    // randomMatrix.sort(() => Math.random() - 0.5);
+    randomMatrix.sort(() => Math.random() - 0.5);
     setGridWithMatrix(randomMatrix);
   };
 
